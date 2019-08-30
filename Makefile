@@ -12,7 +12,7 @@ create-dirs:
 	mkdir -p $(PWD)/.docker/mysql/data;
 
 clone-magento2:
-	git clone --branch 2.3-develop --depth=1 git@github.com:magento/magento2.git magento2;
+	git clone --branch 2.3-develop --depth=1 https://github.com/magento/magento2.git magento2;
 
 magento-setup-install:
 	docker container run -it --rm --user www-data -v $(PWD)/.docker/php/cli/php.ini:/opt/php/lib/php.ini -v $(PWD)/magento2:/var/www/html --network net_magento2 00f100/magento-php-cli:7.2.20-alpine sh -c "composer install; bin/magento setup:install --admin-firstname=Webjump --admin-lastname=Develop --admin-email=developer@webjump.com.br --admin-user=admin --admin-password=123123q --base-url=http://localhost.magento.com --backend-frontname=admin --db-host=magento2-database --db-name=magento2 --db-user=root --db-password=root --use-rewrites=1 --use-secure=1 --base-url-secure=https://localhost.magento.com --use-secure-admin=1 "
