@@ -1,4 +1,4 @@
-.PHONY: docker-nice install create-dirs clone-magento2 magento-setup-install fix-hosts tunning up down clean-install compile deploy-front cache
+.PHONY: docker-nice install create-dirs clone-magento2 magento-setup-install console fix-hosts tunning up down clean-install compile deploy-front cache simple-data
 
 install: docker-nice fix-hosts create-dirs clone-magento2 up tunning magento-setup-install
 
@@ -16,6 +16,9 @@ clone-magento2:
 
 magento-setup-install:
 	docker container run -it --rm --user www-data -v $(PWD)/.docker/php/cli/php.ini:/opt/php/lib/php.ini -v $(PWD)/magento2:/var/www/html --network net_magento2 00f100/magento-php-cli:7.2.20-alpine sh -c "composer install; bin/magento setup:install --admin-firstname=Webjump --admin-lastname=Develop --admin-email=developer@webjump.com.br --admin-user=admin --admin-password=123123q --base-url=http://localhost.magento.com --backend-frontname=admin --db-host=magento2-database --db-name=magento2 --db-user=root --db-password=root --use-rewrites=1 --use-secure=1 --base-url-secure=https://localhost.magento.com --use-secure-admin=1 "
+
+console:
+	docker container run -it --rm --user www-data -v $(PWD)/.docker/php/cli/php.ini:/opt/php/lib/php.ini -v $(PWD)/magento2:/var/www/html --network net_magento2 00f100/magento-php-cli:7.2.20-alpine
 
 fix-hosts:
 	sudo sed -i -e '/127.0.0.1 localhost.magento.com/d' /etc/hosts;
@@ -37,14 +40,5 @@ clean-install:
 	sudo rm -Rf $(PWD)/.docker/mysql;
 	sudo rm -Rf $(PWD)/magento2;
 
-compile:
-	rm -rf generated;
-	rm -rf var;
-	bin/magento setup:upgrade;
-	bin/magento setup:di:compile;
-
-deploy-front:
-	bin/magento setup:static-content:deploy pt_BR en_US -f;
-
-cache:
-	bin/magento cache:flush;
+simple-data:
+	docker container run -it --rm --user www-data -v $(PWD)/.docker/php/cli/php.ini:/opt/php/lib/php.ini -v $(PWD)/magento2:/var/www/html --network net_magento2 00f100/magento-php-cli:7.2.20-alpine sh -c "git clone --branch 2.3-develop --depth=1 https://github.com/magento/magento2-sample-data.git; php -f magento2-sample-data/dev/tools/build-sample-data.php -- --ce-source=/var/www/html; bin/magento setup:upgrade;"
