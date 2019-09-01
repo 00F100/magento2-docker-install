@@ -1,4 +1,4 @@
-# Magento2 Docker Clean Install
+# Magento2 Docker Develop Install
 
 This repository is dedicated to magento 2.3-develop for bug fixes and make features.
 
