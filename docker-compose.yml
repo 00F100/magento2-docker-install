@@ -45,10 +45,12 @@ services:
       - magento2-php-fpm-pool1
       - magento2-php-fpm-pool2
       - magento2-php-fpm-pool3
+      - magento2-php-fpm-xdebug
     links:
       - magento2-php-fpm-pool1
       - magento2-php-fpm-pool2
       - magento2-php-fpm-pool3
+      - magento2-php-fpm-xdebug
     networks:
       - net_magento2
 
@@ -96,6 +98,24 @@ services:
       - ${PWD}/magento2:/var/www/html
       - ${PWD}/.docker/php/fpm/php-fpm.conf:/opt/php/etc/php-fpm.conf
       - ${PWD}/.docker/php/fpm/php.ini:/opt/php/fpm/php.ini
+      - ${PWD}/.docker/php/fpm/www.conf:/opt/php/etc/php-fpm.d/www.conf
+    networks:
+      - net_magento2
+
+  # PHP pool with xdebug
+  magento2-php-fpm-xdebug:
+    image: 00f100/magento-php-fpm:7.2.20-alpine
+    container_name: magento2-php-fpm-xdebug
+    ports:
+      - 9000:9000
+    depends_on:
+      - magento2-database
+    links:
+      - magento2-database
+    volumes:
+      - ${PWD}/magento2:/var/www/html
+      - ${PWD}/.docker/php/fpm/php-fpm.conf:/opt/php/etc/php-fpm.conf
+      - ${PWD}/.docker/php/fpm/php-xdebug.ini:/opt/php/fpm/php.ini
       - ${PWD}/.docker/php/fpm/www.conf:/opt/php/etc/php-fpm.d/www.conf
     networks:
       - net_magento2
