@@ -1,6 +1,6 @@
-.PHONY: docker-nice install create-dirs clone-magento2 magento-setup-install console fix-hosts tunning up down clean-install compile deploy-front cache simple-data docker-up npm-install
+.PHONY: docker-nice install create-dirs clone-magento2 magento-setup-install console fix-hosts tunning up down clean-install compile deploy-front cache simple-data docker-up npm-install copy-gitignore
 
-install: docker-nice fix-hosts create-dirs clone-magento2 up tunning magento-setup-install npm-install
+install: docker-nice fix-hosts create-dirs clone-magento2 up tunning magento-setup-install npm-install copy-gitignore
 
 up: docker-up tunning
 	
@@ -50,3 +50,6 @@ clean-install:
 
 simple-data:
 	docker container run -it --rm --user www-data -v $(PWD)/.docker/php/cli/php.ini:/opt/php/lib/php.ini -v $(PWD)/magento2:/var/www/html --network net_magento2 00f100/magento-php-cli:7.2.20-alpine sh -c "git clone --branch 2.3-develop --depth=1 https://github.com/magento/magento2-sample-data.git; php -f magento2-sample-data/dev/tools/build-sample-data.php -- --ce-source=/var/www/html; bin/magento setup:upgrade;"
+
+copy-gitignore:
+	cp $(PWD)/.gitignore-magento2 $(PWD)/magento2/.gitignore
