@@ -30,12 +30,20 @@ $ make install
 
 ----
 
-### Access into browser
+### Store and admin
 
 - Storefront: https://localhost.magento.com
 - Admin: https://localhost.magento.com/admin
 - Username: `admin`
 - Password: `123123q`
+
+### Datasource
+
+- PHPMyAdmin: http://localhost:8080
+- Host: `magento2-database` or get IP executing `docker exec -it magento2-database bash -c "hostname -i"`
+- Username: root
+- Password: root
+
 
 ### Console PHP + Composer + NPM
 
